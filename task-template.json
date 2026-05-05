@@ -1,0 +1,26 @@
+{
+  "description": "Task Import Template for 100 Days of Python",
+  "format": {
+    "day": "Integer (1-100)",
+    "title": "String",
+    "description": "String - Task instructions",
+    "starter_code": "String - Initial code provided to student",
+    "expected_output": "String or null - Expected result for validation",
+    "difficulty": "String: Easy, Medium, or Hard",
+    "hint": "String - Helpful hint for stuck students",
+    "resources": "Array of URLs"
+  },
+  "example": {
+    "day": 21,
+    "title": "Lambda Functions",
+    "description": "Create a lambda function that squares a number and use it with map() to square a list of numbers.",
+    "starter_code": "numbers = [1, 2, 3, 4, 5]\n\n# Create lambda and use map",
+    "expected_output": "[1, 4, 9, 16, 25]",
+    "difficulty": "Hard",
+    "hint": "Use square = lambda x: x**2, then list(map(square, numbers))",
+    "resources": [
+      "https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions",
+      "https://docs.python.org/3/library/functions.html#map"
+    ]
+  }
+}

@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Days of Python Mastery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --deep-brown: #2C1810;
+            --wine: #722F37;
+            --burgundy: #58181F;
+            --red-accent: #B71C1C;
+            --dirty-white: #EFEBE9;
+            --cream: #F5F5DC;
+            --dark-bg: #1A1A1A;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dirty-white);
+            color: var(--deep-brown);
+        }
+
+        .font-serif {
+            font-family: 'Crimson Pro', serif;
+        }
+
+        .bg-wine { background-color: var(--wine); }
+        .bg-deep-brown { background-color: var(--deep-brown); }
+        .bg-burgundy { background-color: var(--burgundy); }
+        .bg-cream { background-color: var(--cream); }
+        .bg-dirty-white { background-color: var(--dirty-white); }
+        
+        .text-wine { color: var(--wine); }
+        .text-deep-brown { color: var(--deep-brown); }
+        .text-burgundy { color: var(--burgundy); }
+        .text-red-accent { color: var(--red-accent); }
+
+        .border-wine { border-color: var(--wine); }
+        .border-deep-brown { border-color: var(--deep-brown); }
+
+        .code-editor {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            line-height: 1.5;
+            tab-size: 4;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform-origin: 50% 50%;
+        }
+
+        .task-card {
+            background: linear-gradient(135deg, #ffffff 0%, var(--dirty-white) 100%);
+            border-left: 4px solid var(--wine);
+        }
+
+        .hint-box {
+            background-color: rgba(114, 47, 55, 0.1);
+            border-left: 3px solid var(--wine);
+        }
+
+        .countdown-timer {
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--wine) 100%);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-primary {
+            background-color: var(--wine);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--burgundy);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(114, 47, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: var(--deep-brown);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1a0f0a;
+        }
+
+        .day-marker {
+            transition: all 0.2s ease;
+        }
+
+        .day-marker:hover {
+            transform: scale(1.1);
+        }
+
+        .day-marker.completed {
+            background-color: var(--wine);
+            color: white;
+        }
+
+        .day-marker.current {
+            background-color: var(--red-accent);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(183, 28, 28, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(183, 28, 28, 0); }
+        }
+
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .student-view {
+            display: block;
+        }
+
+        .student-view.hidden {
+            display: none;
+        }
+
+        .output-console {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Consolas', monospace;
+        }
+
+        .error-text {
+            color: #f48771;
+        }
+
+        .success-text {
+            color: #4ec9b0;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dirty-white);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--wine);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--burgundy);
+        }
+
+        .modal-overlay {
+            background-color: rgba(44, 24, 16, 0.8);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="bg-deep-brown text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="code-2" class="w-8 h-8 text-red-400"></i>
+                    <div>
+                        <h1 class="font-serif text-xl font-bold tracking-wide">100 Days of Python</h1>
+                        <p class="text-xs text-gray-300">Daily Coding Mastery</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div id="progressIndicator" class="hidden md:flex items-center space-x-2 bg-black bg-opacity-30 px-3 py-1 rounded-full">
+                        <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                            <div id="navProgressBar" class="h-full bg-red-500 transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <span id="progressText" class="text-sm font-medium">0/100</span>
+                    </div>
+                    
+                    <button onclick="toggleAdminLogin()" class="p-2 hover:bg-white hover:bg-opacity-10 rounded-lg transition-colors" title="Admin Access">
+                        <i data-lucide="lock" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="fixed inset-0 modal-overlay hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-6 border-t-4 border-wine">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-serif font-bold text-deep-brown">Admin Access</h2>
+                <button onclick="toggleAdminLogin()" class="text-gray-500 hover:text-gray-700">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="adminPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-wine outline-none" placeholder="Enter admin password">
+                    <p class="text-xs text-gray-500 mt-1">Default: admin123</p>
+                </div>
+                
+                <button onclick="loginAdmin()" class="w-full btn-primary text-white font-semibold py-2 px-4 rounded-lg">
+                    Access Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student View -->
+    <div id="studentView" class="student-view flex-1 flex flex-col">
+        
+        <!-- Hero Section with Countdown -->
+        <div class="countdown-timer text-white py-6 px-4">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p class="text-red-200 text-sm uppercase tracking-wider font-semibold mb-1">Current Challenge</p>
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold">Day <span id="currentDayDisplay">1</span></h2>
+                    <p id="taskTitle" class="text-lg text-red-100 mt-1">Loading...</p>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <div class="text-center">
+                        <div class="text-xs text-red-200 uppercase tracking-wider mb-1">Time Remaining</div>
+                        <div id="countdown" class="text-3xl font-mono font-bold tabular-nums">00:00:00</div>
+                        <div class="text-xs text-red-200 mt-1">Until 11:59 PM</div>
+                    </div>
+                    
+                    <div class="hidden md:block w-px h-12 bg-red-400 bg-opacity-50"></div>
+                    
+                    <div class="hidden md:block text-center">
+                        <div class="text-xs text-red-200 uppercase tracking-wider mb-1">Streak</div>
+                        <div class="flex items-center justify-center space-x-1">
+                            <i data-lucide="flame" class="w-5 h-5 text-orange-400"></i>
+                            <span id="streakCount" class="text-2xl font-bold">0</span>
+                            <span class="text-sm">days</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 max-w-7xl mx-auto w-full p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Sidebar: Task Info -->
+            <div class="lg:col-span-3 space-y-4">
+                <div class="task-card rounded-xl p-6 shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <span id="difficultyBadge" class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Easy</span>
+                        <span class="text-xs text-gray-500">Day <span id="dayNumber">1</span>/100</span>
+                    </div>
+                    
+                    <h3 class="font-serif text-xl font-bold text-deep-brown mb-3">Today's Mission</h3>
+                    <p id="taskDescription" class="text-gray-700 leading-relaxed mb-4">
+                        Loading task description...
+                    </p>
+                    
+                    <div id="hintSection" class="hidden hint-box rounded-lg p-4 mb-4">
+                        <div class="flex items-center mb-2">
+                            <i data-lucide="lightbulb" class="w-4 h-4 text-wine mr-2"></i>
+                            <span class="font-semibold text-wine text-sm">Hint</span>
+                        </div>
+                        <p id="hintText" class="text-sm text-gray-700"></p>
+                    </div>
+                    
+                    <button onclick="toggleHint()" class="text-wine hover:text-burgundy text-sm font-medium flex items-center transition-colors">
+                        <i data-lucide="help-circle" class="w-4 h-4 mr-1"></i>
+                        Need a hint?
+                    </button>
+                    
+                    <div id="resourcesSection" class="mt-4 pt-4 border-t border-gray-200">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Resources</p>
+                        <ul id="resourcesList" class="space-y-2">
+                            <!-- Dynamic resources -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Progress Circle -->
+                <div class="bg-white rounded-xl p-6 shadow-md text-center">
+                    <h4 class="font-serif font-bold text-deep-brown mb-4">Your Progress</h4>
+                    <div class="relative inline-flex items-center justify-center">
+                        <svg class="w-32 h-32 progress-ring">
+                            <circle class="text-gray-200" stroke="currentColor" stroke-width="8" fill="transparent" r="58" cx="64" cy="64"/>
+                            <circle id="progressCircle" class="text-wine progress-ring-circle" stroke="currentColor" stroke-width="8" fill="transparent" r="58" cx="64" cy="64" stroke-dasharray="364.4" stroke-dashoffset="364.4"/>
+                        </svg>
+                        <span id="percentageText" class="absolute text-2xl font-bold text-deep-brown">0%</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2"><span id="completedCount">0</span> of 100 days completed</p>
+                </div>
+            </div>
+
+            <!-- Center: Code Editor -->
+            <div class="lg:col-span-6 space-y-4">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+                    <!-- Editor Header -->
+                    <div class="bg-gray-100 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="file-code" class="w-5 h-5 text-gray-600"></i>
+                            <span class="font-medium text-gray-700">main.py</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="resetCode()" class="px-3 py-1 text-sm text-gray-600 hover:text-red-600 transition-colors flex items-center">
+                                <i data-lucide="rotate-ccw" class="w-4 h-4 mr-1"></i>
+                                Reset
+                            </button>
+                            <button onclick="runCode()" class="btn-primary text-white px-4 py-1 rounded text-sm font-medium flex items-center">
+                                <i data-lucide="play" class="w-4 h-4 mr-1"></i>
+                                Run
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Editor -->
+                    <textarea id="codeEditor" class="code-editor w-full h-64 p-4 resize-none focus:outline-none text-sm" spellcheck="false" placeholder="# Write your Python code here..."></textarea>
+                    
+                    <!-- Output Console -->
+                    <div class="border-t border-gray-200">
+                        <div class="bg-gray-100 px-4 py-2 border-b border-gray-200 flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-600">Output</span>
+                            <button onclick="clearOutput()" class="text-xs text-gray-500 hover:text-gray-700">Clear</button>
+                        </div>
+                        <div id="outputConsole" class="output-console h-32 p-4 overflow-y-auto text-sm">
+                            <span class="text-gray-500">Click 'Run' to execute your code...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission Section -->
+                <div id="submissionArea" class="bg-white rounded-xl p-6 shadow-md border-l-4 border-wine">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="font-bold text-deep-brown mb-2">Ready to submit?</h4>
+                            <p class="text-sm text-gray-600 mb-4">Make sure your code runs without errors and solves the task requirements.</p>
+                        </div>
+                        <div id="validationStatus" class="hidden">
+                            <i data-lucide="check-circle" class="w-8 h-8 text-green-500"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button onclick="validateTask()" class="flex-1 btn-secondary text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center">
+                            <i data-lucide="check-square" class="w-4 h-4 mr-2"></i>
+                            Check Solution
+                        </button>
+                        <button onclick="submitTask()" id="submitBtn" disabled class="flex-1 bg-gray-300 text-gray-500 py-2 px-4 rounded-lg font-medium cursor-not-allowed transition-all flex items-center justify-center">
+                            <i data-lucide="send" class="w-4 h-4 mr-2"></i>
+                            Submit Task
+                        </button>
+                    </div>
+                    
+                    <div id="feedbackMessage" class="mt-3 text-sm hidden"></div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar: Calendar & Log -->
+            <div class="lg:col-span-3 space-y-4">
+                <div class="bg-white rounded-xl p-6 shadow-md">
+                    <h4 class="font-serif font-bold text-deep-brown mb-4 flex items-center">
+                        <i data-lucide="calendar" class="w-5 h-5 mr-2 text-wine"></i>
+                        Daily Log
+                    </h4>
+                    
+                    <div id="calendarGrid" class="grid grid-cols-7 gap-2 mb-4">
+                        <!-- Generated by JS -->
+                    </div>
+                    
+                    <div class="flex items-center justify-between text-xs text-gray-600 pt-4 border-t border-gray-200">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full bg-wine mr-1"></div>
+                            <span>Completed</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full bg-red-600 mr-1"></div>
+                            <span>Today</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full bg-gray-200 mr-1"></div>
+                            <span>Pending</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl p-6 shadow-md">
+                    <h4 class="font-serif font-bold text-deep-brown mb-4">Recent Activity</h4>
+                    <div id="activityLog" class="space-y-3 max-h-64 overflow-y-auto">
+                        <p class="text-sm text-gray-500 italic">No activity yet. Start coding!</p>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div class="bg-cream rounded-xl p-4 shadow-sm border border-deep-brown border-opacity-10">
+                    <button onclick="showStartDateModal()" class="w-full text-left text-sm text-deep-brown hover:text-wine flex items-center justify-between">
+                        <span class="flex items-center">
+                            <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                            Change Start Date
+                        </span>
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminView" class="admin-panel flex-1 bg-gray-50">
+        <div class="bg-deep-brown text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-2xl font-serif font-bold">Admin Dashboard</h2>
+            <button onclick="logoutAdmin()" class="text-sm bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-colors">
+                Logout
+            </button>
+        </div>
+
+        <div class="max-w-7xl mx-auto p-6 space-y-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-wine">
+                    <p class="text-gray-500 text-sm">Total Tasks</p>
+                    <p id="adminTotalTasks" class="text-3xl font-bold text-deep-brown">100</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-green-600">
+                    <p class="text-gray-500 text-sm">Student Progress</p>
+                    <p id="adminStudentProgress" class="text-3xl font-bold text-deep-brown">0%</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-blue-600">
+                    <p class="text-gray-500 text-sm">Current Day</p>
+                    <p id="adminCurrentDay" class="text-3xl font-bold text-deep-brown">1</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-600">
+                    <p class="text-gray-500 text-sm">Completed Tasks</p>
+                    <p id="adminCompletedTasks" class="text-3xl font-bold text-deep-brown">0</p>
+                </div>
+            </div>
+
+            <!-- Task Management -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                    <h3 class="font-bold text-deep-brown text-lg">Task Management</h3>
+                    <div class="space-x-2">
+                        <button onclick="exportTasks()" class="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition-colors flex items-center">
+                            <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+                            Export JSON
+                        </button>
+                        <label class="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition-colors flex items-center cursor-pointer inline-flex">
+                            <i data-lucide="upload" class="w-4 h-4 mr-2"></i>
+                            Import JSON
+                            <input type="file" id="importFile" class="hidden" accept=".json" onchange="importTasks(this)">
+                        </label>
+                        <button onclick="showAddTaskModal()" class="btn-primary text-white px-4 py-2 rounded-lg text-sm flex items-center">
+                            <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                            Add Task
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider">
+                            <tr>
+                                <th class="px-6 py-3">Day</th>
+                                <th class="px-6 py-3">Title</th>
+                                <th class="px-6 py-3">Difficulty</th>
+                                <th class="px-6 py-3">Status</th>
+                                <th class="px-6 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="taskTableBody" class="divide-y divide-gray-200">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Student Submissions -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="font-bold text-deep-brown text-lg mb-4">Student Submissions Log</h3>
+                <div id="submissionsLog" class="space-y-2 max-h-96 overflow-y-auto">
+                    <p class="text-gray-500 italic">No submissions recorded yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Date Modal -->
+    <div id="startDateModal" class="fixed inset-0 modal-overlay hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-6">
+            <h3 class="text-xl font-serif font-bold text-deep-brown mb-4">Set Challenge Start Date</h3>
+            <p class="text-sm text-gray-600 mb-4">Select when the 100-day challenge begins. This will calculate which day you should be on.</p>
+            
+            <input type="date" id="startDateInput" class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-wine focus:border-wine outline-none">
+            
+            <div class="flex space-x-3">
+                <button onclick="closeStartDateModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                <button onclick="saveStartDate()" class="flex-1 btn-primary text-white rounded-lg">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="editTaskModal" class="fixed inset-0 modal-overlay hidden z-50 flex items-center justify-center overflow-y-auto py-8">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 p-6 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xl font-serif font-bold text-deep-brown mb-4">Edit Task</h3>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Day Number</label>
+                        <input type="number" id="editDay" class="w-full px-3 py-2 border rounded-lg" min="1" max="100">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
+                        <select id="editDifficulty" class="w-full px-3 py-2 border rounded-lg">
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input type="text" id="editTitle" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="editDescription" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Starter Code</label>
+                    <textarea id="editStarterCode" rows="4" class="w-full px-3 py-2 border rounded-lg font-mono text-sm"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Expected Output (for validation)</label>
+                    <input type="text" id="editExpectedOutput" class="w-full px-3 py-2 border rounded-lg" placeholder="Leave empty to skip validation">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Hint</label>
+                    <input type="text" id="editHint" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Resources (comma-separated URLs)</label>
+                    <input type="text" id="editResources" class="w-full px-3 py-2 border rounded-lg" placeholder="https://docs.python.org, https://w3schools.com">
+                </div>
+            </div>
+            
+            <div class="flex space-x-3 mt-6">
+                <button onclick="closeEditModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                <button onclick="saveTaskEdit()" class="flex-1 btn-primary text-white rounded-lg">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Application State
+        let appState = {
+            currentDay: 1,
+            startDate: new Date().toISOString().split('T')[0],
+            completedDays: [],
+            currentCode: '',
+            tasks: [],
+            isAdmin: false,
+            submissions: [],
+            streak: 0
+        };
+
+        const ADMIN_PASSWORD = 'admin123'; // In production, use proper hashing
+
+        // Default Tasks (100 days covering all requested topics)
+        const defaultTasks = [
+            // WEEK 1-2: Basics - Calculations, Variables, Strings (Days 1-14)
+            {
+                day: 1,
+                title: "Hello World",
+                description: "Write a Python program that prints 'Hello, World!' to the console. This is the traditional first program for every programmer.",
+                starter_code: "# Write your code here\nprint()",
+                expected_output: "Hello, World!",
+                difficulty: "Easy",
+                hint: "Use the print() function with your message inside quotes.",
+                resources: ["https://docs.python.org/3/tutorial/interpreter.html"]
+            },
+            {
+                day: 2,
+                title: "Variables and Strings",
+                description: "Create variables to store your name and age, then print a sentence introducing yourself using f-strings.",
+                starter_code: "name = \nage = \n\n# Use an f-string to print: Hello, my name is [name] and I am [age] years old.",
+                expected_output: null,
+                difficulty: "Easy",
+                hint: "Use f\"Hello, my name is {name}...\" format for the string.",
+                resources: ["https://docs.python.org/3/tutorial/introduction.html#strings"]
+            },
+            {
+                day: 3,
+                title: "Basic Calculator",
+                description: "Create a simple calculator that adds two numbers together and prints the result. Define two variables with numbers and print their sum.",
+                starter_code: "num1 = 10\nnum2 = 5\n\n# Calculate and print the sum",
+                expected_output: "15",
+                difficulty: "Easy",
+                hint: "Use the + operator to add variables, then print the result.",
+                resources: ["https://docs.python.org/3/tutorial/introduction.html#numbers"]
+            },
+            {
+                day: 4,
+                title: "User Input",
+                description: "Write a program that asks the user for their name using input() and then greets them personally.",
+                starter_code: "# Ask for user input\n# Store it in a variable\n# Print a personalized greeting",
+                expected_output: null,
+                difficulty: "Easy",
+                hint: "Use input('Enter your name: ') to get user input.",
+                resources: ["https://docs.python.org/3/library/functions.html#input"]
+            },
+            {
+                day: 5,
+                title: "Type Conversion",
+                description: "Ask the user for two numbers, convert them to integers, multiply them, and print the result.",
+                starter_code: "# Get two numbers from user\n# Convert them to int\n# Multiply and print",
+                expected_output: null,
+                difficulty: "Medium",
+                hint: "Use int() to convert string input to numbers.",
+                resources: ["https://docs.python.org/3/library/functions.html#int"]
+            },
+            {
+                day: 6,
+                title: "Float Calculations",
+                description: "Calculate the area of a circle given its radius. Use pi = 3.14159 and radius = 7.",
+                starter_code: "pi = 3.14159\nradius = 7\n\n# Calculate area using formula: pi * r^2",
+                expected_output: "153.93809000000002",
+                difficulty: "Easy",
+                hint: "Use ** for exponentiation: radius ** 2",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex"]
+            },
+            {
+                day: 7,
+                title: "String Concatenation",
+                description: "Create three variables: first name, middle name, and last name. Concatenate them with spaces to form a full name.",
+                starter_code: "first = 'John'\nmiddle = 'Paul'\nlast = 'Smith'\n\n# Concatenate with spaces",
+                expected_output: "John Paul Smith",
+                difficulty: "Easy",
+                hint: "Use the + operator with ' ' for spaces between names.",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#str"]
+            },
+            {
+                day: 8,
+                title: "String Formatting",
+                description: "Use .format() method to create a formatted string showing product name, price, and quantity.",
+                starter_code: "product = 'Apple'\nprice = 0.50\nquantity = 12\n\n# Use .format() to display: '12 Apples at $0.50 each = $6.00'",
+                expected_output: "12 Apples at $0.50 each = $6.00",
+                difficulty: "Medium",
+                hint: "Use '{} {} at ${:.2f} each = ${:.2f}'.format(quantity, product, price, total)",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#str.format"]
+            },
+            {
+                day: 9,
+                title: "Math Operations",
+                description: "Calculate the remainder, quotient, and power of two numbers: a=17, b=5.",
+                starter_code: "a = 17\nb = 5\n\n# Print remainder (17 % 5), quotient (17 // 5), and power (2 ** 3)",
+                expected_output: "2\n3\n8",
+                difficulty: "Easy",
+                hint: "Use % for modulo, // for floor division, ** for power.",
+                resources: ["https://docs.python.org/3/library/operator.html"]
+            },
+            {
+                day: 10,
+                title: "BMI Calculator",
+                description: "Calculate Body Mass Index (BMI) given weight in kg and height in meters. Formula: weight / (height ** 2)",
+                starter_code: "weight = 70  # kg\nheight = 1.75  # meters\n\n# Calculate BMI",
+                expected_output: "22.857142857142858",
+                difficulty: "Medium",
+                hint: "Divide weight by height squared.",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex"]
+            },
+            {
+                day: 11,
+                title: "String Methods Practice",
+                description: "Take a messy string with extra spaces and mixed case, clean it up using strip(), lower(), and replace().",
+                starter_code: "messy = '  HeLLo WoRLD  '\n\n# Clean up: remove spaces, make lowercase, replace 'world' with 'python'",
+                expected_output: "hello python",
+                difficulty: "Medium",
+                hint: "Chain methods: .strip().lower().replace('world', 'python')",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#string-methods"]
+            },
+            {
+                day: 12,
+                title: "Temperature Converter",
+                description: "Convert Celsius to Fahrenheit using the formula: F = (C * 9/5) + 32",
+                starter_code: "celsius = 25\n\n# Convert to Fahrenheit",
+                expected_output: "77.0",
+                difficulty: "Easy",
+                hint: "Multiply by 9/5 then add 32.",
+                resources: ["https://docs.python.org/3/tutorial/introduction.html#numbers"]
+            },
+            {
+                day: 13,
+                title: "Multi-variable Calculations",
+                description: "Calculate the total cost of items with tax. Given: price=100, quantity=3, tax_rate=0.08",
+                starter_code: "price = 100\nquantity = 3\ntax_rate = 0.08\n\n# Calculate subtotal, tax amount, and total",
+                expected_output: "324.0",
+                difficulty: "Medium",
+                hint: "total = (price * quantity) * (1 + tax_rate)",
+                resources: ["https://docs.python.org/3/tutorial/introduction.html"]
+            },
+            {
+                day: 14,
+                title: "String Slicing Mastery",
+                description: "Extract specific parts from a date string '2024-03-15' to get year, month, and day separately.",
+                starter_code: "date = '2024-03-15'\n\n# Extract year (first 4), month (5-7), day (last 2)",
+                expected_output: "2024\n03\n15",
+                difficulty: "Medium",
+                hint: "Use date[:4], date[5:7], date[8:]",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#common-sequence-operations"]
+            },
+
+            // WEEK 3: Conditional Statements (Days 15-21)
+            {
+                day: 15,
+                title: "If Statements",
+                description: "Write a program that checks if a number is positive, negative, or zero and prints the appropriate message.",
+                starter_code: "number = 10\n\n# Check if positive, negative, or zero",
+                expected_output: null,
+                difficulty: "Medium",
+                hint: "Use if, elif, and else statements to check conditions.",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html#if-statements"]
+            },
+            {
+                day: 16,
+                title: "Even or Odd",
+                description: "Create a program that determines if a number is even or odd using the modulo operator (%).",
+                starter_code: "number = 7\n\n# Check if even or odd",
+                expected_output: null,
+                difficulty: "Easy",
+                hint: "If number % 2 == 0, it's even. Otherwise, it's odd.",
+                resources: ["https://docs.python.org/3/reference/expressions.html#binary-arithmetic-operations"]
+            },
+            {
+                day: 17,
+                title: "Grade Calculator",
+                description: "Convert a numeric score (0-100) to a letter grade using if-elif-else.",
+                starter_code: "score = 85\n\n# A: 90-100, B: 80-89, C: 70-79, D: 60-69, F: below 60",
+                expected_output: "B",
+                difficulty: "Medium",
+                hint: "Check from highest grade down: if score >= 90: grade = 'A'",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html#if-statements"]
+            },
+            {
+                day: 18,
+                title: "Leap Year Checker",
+                description: "Determine if a year is a leap year. A leap year is divisible by 4, but not by 100 unless also by 400.",
+                starter_code: "year = 2024\n\n# Check leap year conditions",
+                expected_output: "True",
+                difficulty: "Hard",
+                hint: "Use nested conditions: if year % 4 == 0, then check % 100 and % 400",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html"]
+            },
+            {
+                day: 19,
+                title: "Triangle Validity",
+                description: "Check if three sides can form a valid triangle. The sum of any two sides must be greater than the third.",
+                starter_code: "a = 3\nb = 4\nc = 5\n\n# Check all three triangle conditions",
+                expected_output: "Valid triangle",
+                difficulty: "Medium",
+                hint: "Check a + b > c, a + c > b, and b + c > a",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html"]
+            },
+            {
+                day: 20,
+                title: "Number Range Checker",
+                description: "Check if a number is within a valid range (1-100) and provide appropriate feedback.",
+                starter_code: "number = 50\n\n# Check if in range 1-100",
+                expected_output: "Valid: within range",
+                difficulty: "Easy",
+                hint: "Use and operator: if 1 <= number <= 100:",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#comparisons"]
+            },
+            {
+                day: 21,
+                title: "Vowel or Consonant",
+                description: "Check if a given letter is a vowel or consonant.",
+                starter_code: "letter = 'a'\nvowels = 'aeiou'\n\n# Check if letter is in vowels",
+                expected_output: "Vowel",
+                difficulty: "Easy",
+                hint: "Use 'in' operator: if letter.lower() in vowels:",
+                resources: ["https://docs.python.org/3/reference/expressions.html#membership-test-operations"]
+            },
+
+            // WEEK 4: Loops - For and While (Days 22-28)
+            {
+                day: 22,
+                title: "For Loop Basics",
+                description: "Use a for loop to print numbers from 1 to 10 using the range() function.",
+                starter_code: "# Use range() and a for loop",
+                expected_output: "1\n2\n3\n4\n5\n6\n7\n8\n9\n10",
+                difficulty: "Easy",
+                hint: "Use for i in range(1, 11): to iterate through numbers.",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html#for-statements"]
+            },
+            {
+                day: 23,
+                title: "While Loop",
+                description: "Use a while loop to print numbers from 10 down to 1, then print 'Blast off!'.",
+                starter_code: "count = 10\n\n# While loop here",
+                expected_output: null,
+                difficulty: "Medium",
+                hint: "Decrement count by 1 each iteration with count -= 1",
+                resources: ["https://docs.python.org/3/reference/compound_stmts.html#while"]
+            },
+            {
+                day: 24,
+                title: "Sum of Numbers",
+                description: "Calculate the sum of all numbers from 1 to 100 using a loop.",
+                starter_code: "total = 0\n\n# Loop from 1 to 100 and add to total",
+                expected_output: "5050",
+                difficulty: "Easy",
+                hint: "Use range(1, 101) and add each number to total.",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html"]
+            },
+            {
+                day: 25,
+                title: "Multiplication Table",
+                description: "Print the multiplication table for a given number (1-10).",
+                starter_code: "number = 7\n\n# Print multiplication table",
+                expected_output: "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70",
+                difficulty: "Medium",
+                hint: "Use a for loop with range(1, 11) and f-strings.",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html"]
+            },
+            {
+                day: 26,
+                title: "Factorial Calculator",
+                description: "Calculate the factorial of a number using a while loop.",
+                starter_code: "n = 5\nfactorial = 1\n\n# Calculate factorial",
+                expected_output: "120",
+                difficulty: "Medium",
+                hint: "Multiply factorial by n, then decrement n until n > 0.",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html"]
+            },
+            {
+                day: 27,
+                title: "Prime Number Check",
+                description: "Check if a number is prime (divisible only by 1 and itself).",
+                starter_code: "num = 17\nis_prime = True\n\n# Check if prime by testing divisors",
+                expected_output: "True",
+                difficulty: "Hard",
+                hint: "Loop from 2 to sqrt(num), check if num % i == 0",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html"]
+            },
+            {
+                day: 28,
+                title: "Pattern Printing",
+                description: "Print a right-angled triangle pattern with numbers.",
+                starter_code: "rows = 5\n\n# Print pattern:\n# 1\n# 12\n# 123\n# 1234\n# 12345",
+                expected_output: "1\n12\n123\n1234\n12345",
+                difficulty: "Medium",
+                hint: "Use nested loops: outer for rows, inner for columns.",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html"]
+            },
+
+            // WEEK 5: Lists and Tuples (Days 29-35)
+            {
+                day: 29,
+                title: "Lists Basics",
+                description: "Create a list of 5 fruits, then print each fruit on a separate line using a for loop.",
+                starter_code: "fruits = []\n\n# Print each fruit",
+                expected_output: null,
+                difficulty: "Easy",
+                hint: "Define the list with square brackets: ['apple', 'banana', ...]",
+                resources: ["https://docs.python.org/3/tutorial/introduction.html#lists"]
+            },
+            {
+                day: 30,
+                title: "List Methods",
+                description: "Create an empty list, append three items to it, remove one, and print the final list.",
+                starter_code: "my_list = []\n\n# Append items\n# Remove one\n# Print list",
+                expected_output: null,
+                difficulty: "Medium",
+                hint: "Use .append() to add and .remove() or .pop() to remove items.",
+                resources: ["https://docs.python.org/3/tutorial/datastructures.html#more-on-lists"]
+            },
+            {
+                day: 31,
+                title: "List Statistics",
+                description: "Find the maximum, minimum, sum, and average of a list of numbers.",
+                starter_code: "numbers = [45, 12, 78, 23, 67, 89, 34]\n\n# Calculate statistics",
+                expected_output: "Max: 89\nMin: 12\nSum: 348\nAverage: 49.71",
+                difficulty: "Easy",
+                hint: "Use max(), min(), sum(), and len() functions.",
+                resources: ["https://docs.python.org/3/library/functions.html"]
+            },
+            {
+                day: 32,
+                title: "List Comprehension",
+                description: "Create a list of squares of numbers from 1 to 10 using list comprehension.",
+                starter_code: "# squares = [expression for item in range()]",
+                expected_output: "[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]",
+                difficulty: "Medium",
+                hint: "Use [x**2 for x in range(1, 11)]",
+                resources: ["https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions"]
+            },
+            {
+                day: 33,
+                title: "Filtering Lists",
+                description: "Use list comprehension to filter even numbers from a list.",
+                starter_code: "numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n\n# Filter even numbers",
+                expected_output: "[2, 4, 6, 8, 10]",
+                difficulty: "Medium",
+                hint: "Use [x for x in numbers if x % 2 == 0]",
+                resources: ["https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions"]
+            },
+            {
+                day: 34,
+                title: "Tuples Introduction",
+                description: "Create a tuple representing coordinates (x, y) and demonstrate that tuples are immutable.",
+                starter_code: "point = (10, 20)\n\n# Try to modify and catch the error, then create new tuple",
+                expected_output: "New point: (15, 25)",
+                difficulty: "Medium",
+                hint: "Tuples can't be modified; create a new one: new_point = (15, 25)",
+                resources: ["https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences"]
+            },
+            {
+                day: 35,
+                title: "Tuple Unpacking",
+                description: "Unpack a tuple into multiple variables and swap values using tuple packing/unpacking.",
+                starter_code: "data = ('Alice', 25, 'Engineer')\n\n# Unpack into name, age, job",
+                expected_output: "Name: Alice\nAge: 25\nJob: Engineer",
+                difficulty: "Medium",
+                hint: "Use: name, age, job = data",
+                resources: ["https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences"]
+            },
+
+            // WEEK 6: Dictionaries (Days 36-42)
+            {
+                day: 36,
+                title: "Dictionaries",
+                description: "Create a dictionary representing a person with keys for name, age, and city. Print each key-value pair.",
+                starter_code: "person = {\n    \n}\n\n# Print the dictionary items",
+                expected_output: null,
+                difficulty: "Medium",
+                hint: "Use person['name'] = 'John' syntax or define all at once.",
+                resources: ["https://docs.python.org/3/tutorial/datastructures.html#dictionaries"]
+            },
+            {
+                day: 37,
+                title: "Dictionary Operations",
+                description: "Create a phone book dictionary, add entries, look up a number, and remove an entry.",
+                starter_code: "phone_book = {}\n\n# Add Alice: 555-1234, Bob: 555-5678\n# Look up Alice\n# Remove Bob\n# Print final phone book",
+                expected_output: "Alice's number: 555-1234\nFinal book: {'Alice': '555-1234'}",
+                difficulty: "Medium",
+                hint: "Use phone_book['Alice'] = '555-1234' to add, del to remove.",
+                resources: ["https://docs.python.org/3/tutorial/datastructures.html#dictionaries"]
+            },
+            {
+                day: 38,
+                title: "Word Frequency Counter",
+                description: "Count the frequency of each word in a sentence using a dictionary.",
+                starter_code: "sentence = 'the quick brown fox jumps over the lazy dog the fox was quick'\n\n# Count word frequencies",
+                expected_output: null,
+                difficulty: "Hard",
+                hint: "Split sentence, then use dict.get(word, 0) + 1 for counting.",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#dict"]
+            },
+            {
+                day: 39,
+                title: "Dictionary Comprehension",
+                description: "Create a dictionary mapping numbers to their squares using dictionary comprehension.",
+                starter_code: "# squares_dict = {key: value for item in range()}",
+                expected_output: "{1: 1, 2: 4, 3: 9, 4: 16, 5: 25}",
+                difficulty: "Medium",
+                hint: "Use {x: x**2 for x in range(1, 6)}",
+                resources: ["https://docs.python.org/3/tutorial/datastructures.html#dictionaries"]
+            },
+            {
+                day: 40,
+                title: "Nested Dictionaries",
+                description: "Create a nested dictionary representing students and their grades in multiple subjects.",
+                starter_code: "# Create structure: {'Alice': {'Math': 90, 'Science': 85}, ...}\n\n# Print Alice's Math grade",
+                expected_output: "Alice's Math grade: 90",
+                difficulty: "Hard",
+                hint: "Use nested braces: {'Alice': {'Math': 90, 'Science': 85}}",
+                resources: ["https://docs.python.org/3/tutorial/datastructures.html#dictionaries"]
+            },
+            {
+                day: 41,
+                title: "Dictionary Methods",
+                description: "Practice using dictionary methods: keys(), values(), items(), get(), and update().",
+                starter_code: "data = {'a': 1, 'b': 2, 'c': 3}\n\n# Use various dictionary methods",
+                expected_output: "Keys: dict_keys(['a', 'b', 'c'])\nValues: dict_values([1, 2, 3])\nGet 'b': 2",
+                difficulty: "Medium",
+                hint: "Use data.keys(), data.values(), data.get('b')",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#dict"]
+            },
+            {
+                day: 42,
+                title: "Merging Dictionaries",
+                description: "Merge two dictionaries and handle key conflicts.",
+                starter_code: "dict1 = {'a': 1, 'b': 2}\ndict2 = {'b': 3, 'c': 4}\n\n# Merge dict2 into dict1 (Python 3.9+ use | operator)",
+                expected_output: "{'a': 1, 'b': 3, 'c': 4}",
+                difficulty: "Medium",
+                hint: "Use dict1.update(dict2) or {**dict1, **dict2}",
+                resources: ["https://docs.python.org/3/library/stdtypes.html#dict"]
+            },
+
+            // WEEK 7: Functions and Modules (Days 43-49)
+            {
+                day: 43,
+                title: "Functions",
+                description: "Write a function called greet() that takes a name parameter and prints a greeting. Call it twice with different names.",
+                starter_code: "def greet(name):\n    pass\n\n# Call the function",
+                expected_output: null,
+                difficulty: "Medium",
+                hint: "Define function with def, use return or print inside.",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html#defining-functions"]
+            },
+            {
+                day: 44,
+                title: "Return Values",
+                description: "Create a function that takes two numbers and returns their sum. Store the result in a variable and print it.",
+                starter_code: "def add_numbers(a, b):\n    pass\n\nresult = add_numbers(5, 3)\nprint(result)",
+                expected_output: "8",
+                difficulty: "Medium",
+                hint: "Use the return statement to send back the calculated value.",
+                resources: ["https://docs.python.org/3/reference/simple_stmts.html#return"]
+            },
+            {
+                day: 45,
+                title: "Default Parameters",
+                description: "Create a function with default parameters for greeting with a default name and greeting word.",
+                starter_code: "def greet(name='World', greeting='Hello'):\n    pass\n\n# Call with no args, one arg, and both args",
+                expected_output: "Hello, World!\nHi, World!\nHi, Alice!",
+                difficulty: "Medium",
+                hint: "Use return f'{greeting}, {name}!'",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html#more-on-defining-functions"]
+            },
+            {
+                day: 46,
+                title: "Multiple Return Values",
+                description: "Write a function that returns multiple values (min, max, avg) from a list of numbers.",
+                starter_code: "def analyze_numbers(numbers):\n    pass\n\nnums = [10, 20, 30, 40, 50]\n# Unpack the returned values",
+                expected_output: "Min: 10, Max: 50, Avg: 30.0",
+                difficulty: "Medium",
+                hint: "Return a tuple: return (minimum, maximum, average)",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html#defining-functions"]
+            },
+            {
+                day: 47,
+                title: "Lambda Functions",
+                description: "Create a lambda function that squares a number and use it with map() to square a list of numbers.",
+                starter_code: "numbers = [1, 2, 3, 4, 5]\n\n# Create lambda and use map",
+                expected_output: "[1, 4, 9, 16, 25]",
+                difficulty: "Hard",
+                hint: "Use square = lambda x: x**2, then list(map(square, numbers))",
+                resources: ["https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions"]
+            },
+            {
+                day: 48,
+                title: "Recursive Functions",
+                description: "Write a recursive function to calculate the factorial of a number.",
+                starter_code: "def factorial(n):\n    # Base case and recursive case\n    pass\n\nprint(factorial(5))",
+                expected_output: "120",
+                difficulty: "Hard",
+                hint: "Base case: if n <= 1: return 1. Recursive: return n * factorial(n-1)",
+                resources: ["https://docs.python.org/3/faq/design.html#what-s-a-recursive-function"]
+            },
+            {
+                day: 49,
+                title: "Importing Modules",
+                description: "Import the math module and use various functions: sqrt, pow, ceil, floor.",
+                starter_code: "# Import math module\n\n# Use math.sqrt(16), math.pow(2, 3), math.ceil(4.2), math.floor(4.8)",
+                expected_output: "4.0\n8.0\n5\n4",
+                difficulty: "Easy",
+                hint: "Import with 'import math' then use math.function()",
+                resources: ["https://docs.python.org/3/tutorial/modules.html"]
+            },
+
+            // WEEK 8: Built-in Functions and Useful Modules (Days 50-56)
+            {
+                day: 50,
+                title: "Built-in Functions",
+                description: "Practice using built-in functions: len(), type(), isinstance(), abs(), round(), sorted().",
+                starter_code: "data = [3, 1, 4, 1, 5, 9, 2, 6]\n\n# Use various built-in functions",
+                expected_output: "Length: 8\nSorted: [1, 1, 2, 3, 4, 5, 6, 9]\nMax: 9\nSum: 31",
+                difficulty: "Easy",
+                hint: "Use len(data), sorted(data), max(data), sum(data)",
+                resources: ["https://docs.python.org/3/library/functions.html"]
+            },
+            {
+                day: 51,
+                title: "Random Module",
+                description: "Use the random module to generate random numbers, random choices, and shuffle a list.",
+                starter_code: "# Import random\n\n# Generate random int 1-100, random choice from list, shuffle list",
+                expected_output: null,
+                difficulty: "Medium",
+                hint: "Use random.randint(1, 100), random.choice(list), random.shuffle(list)",
+                resources: ["https://docs.python.org/3/library/random.html"]
+            },
+            {
+                day: 52,
+                title: "Datetime Module",
+                description: "Use datetime to get current date/time, format it, and calculate time differences.",
+                starter_code: "# Import datetime\n\n# Get current datetime, format as string, calculate days until New Year",
+                expected_output: null,
+                difficulty: "Medium",
+                hint: "Use datetime.datetime.now() and strftime for formatting.",
+                resources: ["https://docs.python.org/3/library/datetime.html"]
+            },
+            {
+                day: 53,
+                title: "JSON Module",
+                description: "Convert a Python dictionary to JSON string and back using json module.",
+                starter_code: "# Import json\n\ndata = {'name': 'Alice', 'age': 30, 'city': 'NYC'}\n\n# Convert to JSON string and back",
+                expected_output: '{"name": "Alice", "age": 30, "city": "NYC"}\n<class \'dict\'>\nAlice',
+                difficulty: "Medium",
+                hint: "Use json.dumps() to convert to string, json.loads() back to dict.",
+                resources: ["https://docs.python.org/3/library/json.html"]
+            },
+            {
+                day: 54,
+                title: "OS Module Basics",
+                description: "Use os module to get current working directory, list files, and check if file exists.",
+                starter_code: "# Import os\n\n# Get current directory, list files (simulated)",
+                expected_output: null,
+                difficulty: "Medium",
+                hint: "Use os.getcwd(), os.listdir('.'), os.path.exists('file.txt')",
+                resources: ["https://docs.python.org/3/library/os.html"]
+            },
+            {
+                day: 55,
+                title: "Collections Module",
+                description: "Use Counter from collections to count elements and find most common.",
+                starter_code: "# from collections import Counter\n\ndata = ['apple', 'banana', 'apple', 'orange', 'banana', 'apple']\n\n# Count elements and find most common",
+                expected_output: "Counter({'apple': 3, 'banana': 2, 'orange': 1})\nMost common: [('apple', 3)]",
+                difficulty: "Hard",
+                hint: "Use Counter(data) and .most_common(1)",
+                resources: ["https://docs.python.org/3/library/collections.html"]
+            },
+            {
+                day: 56,
+                title: "Itertools Module",
+                description: "Use itertools to create combinations, permutations, and cycle through elements.",
+                starter_code: "# Import itertools\n\nitems = ['A', 'B', 'C']\n\n# Get combinations of 2, permutations of 2",
+                expected_output: "Combinations: [('A', 'B'), ('A', 'C'), ('B', 'C')]\nPermutations: [('A', 'B'), ('A', 'C'), ('B', 'A'), ('B', 'C'), ('C', 'A'), ('C', 'B')]",
+                difficulty: "Hard",
+                hint: "Use itertools.combinations(items, 2) and itertools.permutations(items, 2)",
+                resources: ["https://docs.python.org/3/library/itertools.html"]
+            },
+
+            // WEEK 9: File Handling (Days 57-63)
+            {
+                day: 57,
+                title: "File Reading",
+                description: "Write code that would read a file named 'data.txt' and print its contents line by line. (Simulate the code)",
+                starter_code: "# Use with open() as file:\n# Read and print lines",
+                expected_output: null,
+                difficulty: "Hard",
+                hint: "Use with open('data.txt', 'r') as f: to safely handle files.",
+                resources: ["https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files"]
+            },
+            {
+                day: 58,
+                title: "File Writing",
+                description: "Write code to create a file and write multiple lines to it.",
+                starter_code: "# Open file in write mode\n# Write several lines\n# Close automatically with with statement",
+                expected_output: "File created successfully",
+                difficulty: "Medium",
+                hint: "Use with open('output.txt', 'w') as f: and f.write()",
+                resources: ["https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files"]
+            },
+            {
+                day: 59,
+                title: "CSV Module",
+                description: "Read and write CSV data using the csv module.",
+                starter_code: "# Import csv\n\n# Create data and write to CSV format (simulated)",
+                expected_output: "name,age,city\nAlice,30,NYC\nBob,25,LA",
+                difficulty: "Medium",
+                hint: "Use csv.writer() and writerow() for writing data.",
+                resources: ["https://docs.python.org/3/library/csv.html"]
+            },
+            {
+                day: 60,
+                title: "Error Handling",
+                description: "Write a try-except block that attempts to divide 10 by 0 and catches the ZeroDivisionError gracefully.",
+                starter_code: "try:\n    result = 10 / 0\nexcept:\n    # Handle error",
+                expected_output: "Cannot divide by zero!",
+                difficulty: "Hard",
+                hint: "Print a friendly message in the except block.",
+                resources: ["https://docs.python.org/3/tutorial/errors.html#handling-exceptions"]
+            },
+            {
+                day: 61,
+                title: "Multiple Exceptions",
+                description: "Handle different types of exceptions (ValueError, TypeError) in a single try block.",
+                starter_code: "try:\n    # Code that might raise different exceptions\n    x = int('not a number')\nexcept ValueError:\n    # Handle value error\nexcept TypeError:\n    # Handle type error",
+                expected_output: "Invalid input: must be a number",
+                difficulty: "Hard",
+                hint: "Use multiple except blocks for different error types.",
+                resources: ["https://docs.python.org/3/tutorial/errors.html#handling-exceptions"]
+            },
+            {
+                day: 62,
+                title: "Finally Block",
+                description: "Demonstrate the use of finally block that always executes regardless of exceptions.",
+                starter_code: "try:\n    # Some operation\n    print('Trying...')\nexcept:\n    print('Error occurred')\nfinally:\n    # This always runs",
+                expected_output: "Trying...\nOperation complete\nCleanup done",
+                difficulty: "Medium",
+                hint: "Use finally for cleanup operations that must always run.",
+                resources: ["https://docs.python.org/3/tutorial/errors.html#defining-clean-up-actions"]
+            },
+            {
+                day: 63,
+                title: "Custom Exceptions",
+                description: "Create a custom exception class and raise it based on a condition.",
+                starter_code: "# Define custom exception class\n# Raise it when condition is met\n# Catch and handle it",
+                expected_output: "Validation failed: Value too small",
+                difficulty: "Hard",
+                hint: "Create class ValidationError(Exception): pass",
+                resources: ["https://docs.python.org/3/tutorial/errors.html#user-defined-exceptions"]
+            },
+
+            // WEEK 10: Object-Oriented Programming (Days 64-70)
+            {
+                day: 64,
+                title: "Classes and Objects",
+                description: "Create a simple class called Dog with attributes name and age, and a method bark().",
+                starter_code: "class Dog:\n    def __init__(self, name, age):\n        pass\n    \n    def bark(self):\n        pass\n\n# Create a dog object and call bark",
+                expected_output: "Buddy says: Woof!",
+                difficulty: "Medium",
+                hint: "Use self.name = name in __init__, return f'{self.name} says: Woof!'",
+                resources: ["https://docs.python.org/3/tutorial/classes.html"]
+            },
+            {
+                day: 65,
+                title: "Instance Methods",
+                description: "Create a Rectangle class with methods to calculate area and perimeter.",
+                starter_code: "class Rectangle:\n    def __init__(self, width, height):\n        pass\n    \n    def area(self):\n        pass\n    \n    def perimeter(self):\n        pass\n\nrect = Rectangle(5, 3)\nprint(rect.area(), rect.perimeter())",
+                expected_output: "15 16",
+                difficulty: "Medium",
+                hint: "Return width * height for area, 2*(width+height) for perimeter.",
+                resources: ["https://docs.python.org/3/tutorial/classes.html#method-objects"]
+            },
+            {
+                day: 66,
+                title: "Class Variables",
+                description: "Create a BankAccount class with a class variable for interest rate and instance variables for balance.",
+                starter_code: "class BankAccount:\n    interest_rate = 0.05  # Class variable\n    \n    def __init__(self, balance):\n        pass\n    \n    def apply_interest(self):\n        pass\n\naccount = BankAccount(1000)\naccount.apply_interest()\nprint(account.balance)",
+                expected_output: "1050.0",
+                difficulty: "Medium",
+                hint: "Use self.balance *= (1 + BankAccount.interest_rate)",
+                resources: ["https://docs.python.org/3/tutorial/classes.html#class-and-instance-variables"]
+            },
+            {
+                day: 67,
+                title: "Inheritance",
+                description: "Create a base class Animal and derived classes Dog and Cat with different speak methods.",
+                starter_code: "class Animal:\n    def __init__(self, name):\n        self.name = name\n    \n    def speak(self):\n        raise NotImplementedError\n\nclass Dog(Animal):\n    pass\n\nclass Cat(Animal):\n    pass\n\n# Create instances and call speak",
+                expected_output: "Buddy says Woof!\nWhiskers says Meow!",
+                difficulty: "Hard",
+                hint: "Override speak() in each subclass with different return values.",
+                resources: ["https://docs.python.org/3/tutorial/classes.html#inheritance"]
+            },
+            {
+                day: 68,
+                title: "Polymorphism",
+                description: "Demonstrate polymorphism by creating a function that works with different animal types.",
+                starter_code: "class Animal:\n    def speak(self): pass\n\nclass Dog(Animal):\n    def speak(self): return 'Woof'\n\nclass Cat(Animal):\n    def speak(self): return 'Meow'\n\ndef animal_concert(animals):\n    # Loop through animals and call speak\n    pass\n\nzoo = [Dog(), Cat(), Dog()]\nanimal_concert(zoo)",
+                expected_output: "Woof\nMeow\nWoof",
+                difficulty: "Hard",
+                hint: "Simply call animal.speak() for each animal in the loop.",
+                resources: ["https://docs.python.org/3/tutorial/classes.html#polymorphism"]
+            },
+            {
+                day: 69,
+                title: "Encapsulation",
+                description: "Create a class with private attributes using name mangling and provide getter/setter methods.",
+                starter_code: "class Person:\n    def __init__(self, name):\n        self.__name = name  # Private attribute\n    \n    # Getter method\n    def get_name(self):\n        pass\n    \n    # Setter method\n    def set_name(self, name):\n        pass\n\np = Person('Alice')\nprint(p.get_name())\np.set_name('Bob')\nprint(p.get_name())",
+                expected_output: "Alice\nBob",
+                difficulty: "Hard",
+                hint: "Return self.__name in getter, validate and set in setter.",
+                resources: ["https://docs.python.org/3/tutorial/classes.html#private-variables"]
+            },
+            {
+                day: 70,
+                title: "Special Methods",
+                description: "Implement special methods __str__, __repr__, __len__, and __eq__ in a custom class.",
+                starter_code: "class Book:\n    def __init__(self, title, pages):\n        self.title = title\n        self.pages = pages\n    \n    # Implement __str__, __len__, __eq__\n\nbook1 = Book('Python Guide', 300)\nbook2 = Book('Python Guide', 300)\nprint(str(book1))\nprint(len(book1))\nprint(book1 == book2)",
+                expected_output: "Book: Python Guide (300 pages)\n300\nTrue",
+                difficulty: "Hard",
+                hint: "def __str__(self): return f'Book: {self.title} ({self.pages} pages)'",
+                resources: ["https://docs.python.org/3/reference/datamodel.html#special-method-names"]
+            },
+
+            // WEEK 11: Basic Turtle Graphics (Days 71-77)
+            {
+                day: 71,
+                title: "Turtle Setup",
+                description: "Set up a turtle graphics window and draw a simple line. (Code structure only - turtle won't run in browser)",
+                starter_code: "# import turtle\n\n# Create turtle object\n# Draw a line forward 100 pixels\n# Keep window open",
+                expected_output: "Turtle graphics code ready (requires desktop Python)",
+                difficulty: "Easy",
+                hint: "Use turtle.Turtle(), t.forward(100), turtle.done()",
+                resources: ["https://docs.python.org/3/library/turtle.html"]
+            },
+            {
+                day: 72,
+                title: "Turtle Shapes",
+                description: "Draw a square using turtle graphics with a for loop.",
+                starter_code: "# import turtle\n\nt = turtle.Turtle()\n\n# Draw square using loop\n# Move forward and turn 90 degrees 4 times",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Easy",
+                hint: "Use for _ in range(4): t.forward(100); t.right(90)",
+                resources: ["https://docs.python.org/3/library/turtle.html"]
+            },
+            {
+                day: 73,
+                title: "Turtle Colors",
+                description: "Draw a colorful pattern using different pen colors and fill colors.",
+                starter_code: "# import turtle\n\nt = turtle.Turtle()\n\n# Set colors and draw filled shape",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Medium",
+                hint: "Use t.pencolor(), t.fillcolor(), t.begin_fill(), t.end_fill()",
+                resources: ["https://docs.python.org/3/library/turtle.html#turtle-color-mode"]
+            },
+            {
+                day: 74,
+                title: "Turtle Circles",
+                description: "Draw circles and arcs using turtle graphics.",
+                starter_code: "# import turtle\n\nt = turtle.Turtle()\n\n# Draw full circle and semicircle",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Medium",
+                hint: "Use t.circle(50) for full circle, t.circle(50, 180) for semicircle.",
+                resources: ["https://docs.python.org/3/library/turtle.html#turtle.circle"]
+            },
+            {
+                day: 75,
+                title: "Turtle Polygons",
+                description: "Create a function that draws any regular polygon given the number of sides.",
+                starter_code: "# import turtle\n\ndef draw_polygon(sides, length):\n    pass\n\nt = turtle.Turtle()\n# Draw hexagon",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Medium",
+                hint: "Angle = 360 / sides, use for loop with forward and right turn.",
+                resources: ["https://docs.python.org/3/library/turtle.html"]
+            },
+            {
+                day: 76,
+                title: "Turtle Spirals",
+                description: "Draw a spiral pattern by increasing the forward distance each iteration.",
+                starter_code: "# import turtle\n\nt = turtle.Turtle()\n\n# Draw spiral: increase step size while turning",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Medium",
+                hint: "Use for i in range(100): t.forward(i*2); t.right(90)",
+                resources: ["https://docs.python.org/3/library/turtle.html"]
+            },
+            {
+                day: 77,
+                title: "Turtle Art - Star",
+                description: "Draw a five-pointed star using turtle graphics.",
+                starter_code: "# import turtle\n\nt = turtle.Turtle()\n\n# Draw 5-pointed star",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Medium",
+                hint: "Turn 144 degrees (external angle) between each point.",
+                resources: ["https://docs.python.org/3/library/turtle.html"]
+            },
+
+            // WEEK 12: Advanced Turtle Graphics (Days 78-84)
+            {
+                day: 78,
+                title: "Turtle Fractals - Tree",
+                description: "Draw a fractal tree using recursion.",
+                starter_code: "# import turtle\n\ndef draw_tree(branch_length, t):\n    # Recursive function to draw tree branches\n    pass\n\nt = turtle.Turtle()\n# Call draw_tree",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Hard",
+                hint: "Recursive case: draw branch, turn, draw smaller branches.",
+                resources: ["https://docs.python.org/3/library/turtle.html"]
+            },
+            {
+                day: 79,
+                title: "Turtle Fractals - Koch Snowflake",
+                description: "Draw a Koch snowflake fractal using recursion.",
+                starter_code: "# import turtle\n\ndef koch_curve(length, depth):\n    # Recursive Koch curve\n    pass\n\n# Draw three Koch curves to form snowflake",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Hard",
+                hint: "Recursive pattern: divide line into 4 segments with triangle bump.",
+                resources: ["https://en.wikipedia.org/wiki/Koch_snowflake"]
+            },
+            {
+                day: 80,
+                title: "Turtle Animation",
+                description: "Create a simple animation by moving turtle and updating screen.",
+                starter_code: "# import turtle\n\nt = turtle.Turtle()\nscreen = turtle.Screen()\n\n# Animate turtle moving in a pattern",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Medium",
+                hint: "Use screen.tracer(0) for speed, screen.update() to refresh.",
+                resources: ["https://docs.python.org/3/library/turtle.html#turtle.tracer"]
+            },
+            {
+                day: 81,
+                title: "Turtle Events",
+                description: "Make turtle respond to keyboard and mouse events.",
+                starter_code: "# import turtle\n\ndef move_forward():\n    pass\n\ndef turn_left():\n    pass\n\nt = turtle.Turtle()\nscreen = turtle.Screen()\n\n# Bind keys to functions\n# Start event loop",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Hard",
+                hint: "Use screen.onkey(move_forward, 'Up'), screen.listen(), screen.mainloop()",
+                resources: ["https://docs.python.org/3/library/turtle.html#event-handling"]
+            },
+            {
+                day: 82,
+                title: "Turtle - Multiple Turtles",
+                description: "Create and control multiple turtle objects simultaneously.",
+                starter_code: "# import turtle\n\n# Create multiple turtles with different colors\n# Make them draw different patterns",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Medium",
+                hint: "Create multiple turtle.Turtle() objects, set different colors.",
+                resources: ["https://docs.python.org/3/library/turtle.html"]
+            },
+            {
+                day: 83,
+                title: "Turtle - Stamp and Dot",
+                description: "Use stamp() to leave turtle shapes and dot() to draw points.",
+                starter_code: "# import turtle\n\nt = turtle.Turtle()\n\n# Create pattern using stamp() and dot()",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Easy",
+                hint: "Use t.shape('turtle'), t.stamp(), t.dot(size, color)",
+                resources: ["https://docs.python.org/3/library/turtle.html#turtle.stamp"]
+            },
+            {
+                day: 84,
+                title: "Turtle - Final Project",
+                description: "Create a complex drawing combining all turtle skills: shapes, colors, and patterns.",
+                starter_code: "# import turtle\n\n# Create your masterpiece!\n# Combine shapes, colors, loops, and functions",
+                expected_output: "Turtle graphics code ready",
+                difficulty: "Hard",
+                hint: "Plan your design: background, multiple elements, use functions.",
+                resources: ["https://docs.python.org/3/library/turtle.html"]
+            },
+
+            // WEEK 13: GUI Programming with tkinter (Days 85-91)
+            {
+                day: 85,
+                title: "tkinter - Hello GUI",
+                description: "Create your first GUI window with tkinter. (Code structure only - tkinter requires desktop Python)",
+                starter_code: "# import tkinter as tk\n\n# Create main window\n# Set title and size\n# Start main loop",
+                expected_output: "tkinter code ready (requires desktop Python)",
+                difficulty: "Easy",
+                hint: "Use tk.Tk(), root.title(), root.geometry(), root.mainloop()",
+                resources: ["https://docs.python.org/3/library/tkinter.html"]
+            },
+            {
+                day: 86,
+                title: "tkinter - Labels and Buttons",
+                description: "Create a window with a label and a button that changes the label text when clicked.",
+                starter_code: "# import tkinter as tk\n\ndef on_click():\n    pass\n\nroot = tk.Tk()\n# Create label and button\n# Configure button command\n# Pack widgets",
+                expected_output: "tkinter code ready",
+                difficulty: "Easy",
+                hint: "Use tk.Label(), tk.Button(), label.config(text='new text')",
+                resources: ["https://docs.python.org/3/library/tkinter.html#the-button-widget"]
+            },
+            {
+                day: 87,
+                title: "tkinter - Entry Widget",
+                description: "Create a simple form with an entry field and a button that displays the entered text.",
+                starter_code: "# import tkinter as tk\n\ndef show_text():\n    pass\n\nroot = tk.Tk()\n# Create entry widget and button\n# Get text from entry when button clicked",
+                expected_output: "tkinter code ready",
+                difficulty: "Medium",
+                hint: "Use tk.Entry(), entry.get() to retrieve text.",
+                resources: ["https://docs.python.org/3/library/tkinter.html#the-entry-widget"]
+            },
+            {
+                day: 88,
+                title: "tkinter - Layout Management",
+                description: "Practice different layout managers: pack, grid, and place.",
+                starter_code: "# import tkinter as tk\n\nroot = tk.Tk()\n\n# Create widgets using pack(), grid(), and place()",
+                expected_output: "tkinter code ready",
+                difficulty: "Medium",
+                hint: "pack() for simple, grid() for table-like, place() for absolute.",
+                resources: ["https://docs.python.org/3/library/tkinter.html#the-pack-manager"]
+            },
+            {
+                day: 89,
+                title: "tkinter - Calculator",
+                description: "Build a simple calculator with buttons for digits and operations.",
+                starter_code: "# import tkinter as tk\n\nclass Calculator:\n    def __init__(self, master):\n        pass\n    \n    def create_buttons(self):\n        pass\n\nroot = tk.Tk()\ncalc = Calculator(root)",
+                expected_output: "tkinter code ready",
+                difficulty: "Hard",
+                hint: "Use grid layout, store current value, handle button clicks.",
+                resources: ["https://docs.python.org/3/library/tkinter.html"]
+            },
+            {
+                day: 90,
+                title: "tkinter - Checkbuttons and Radiobuttons",
+                description: "Create a form with checkbox and radio button options.",
+                starter_code: "# import tkinter as tk\n\nroot = tk.Tk()\n\n# Create IntVar/StringVar for tracking\n# Create Checkbutton and Radiobutton widgets",
+                expected_output: "tkinter code ready",
+                difficulty: "Medium",
+                hint: "Use tk.IntVar(), tk.Checkbutton(), tk.Radiobutton()",
+                resources: ["https://docs.python.org/3/library/tkinter.html#the-checkbutton-widget"]
+            },
+            {
+                day: 91,
+                title: "tkinter - Listbox and Scrollbar",
+                description: "Create a scrollable list of items with selection capability.",
+                starter_code: "# import tkinter as tk\n\nroot = tk.Tk()\n\n# Create Listbox with Scrollbar\n# Add items to list\n# Handle selection",
+                expected_output: "tkinter code ready",
+                difficulty: "Medium",
+                hint: "Use tk.Listbox(), tk.Scrollbar(), listbox.insert(), listbox.curselection()",
+                resources: ["https://docs.python.org/3/library/tkinter.html#the-listbox-widget"]
+            },
+
+            // WEEK 14: Advanced Topics (Days 92-98)
+            {
+                day: 92,
+                title: "tkinter - Canvas Drawing",
+                description: "Use the Canvas widget to draw shapes and create a simple drawing app.",
+                starter_code: "# import tkinter as tk\n\nroot = tk.Tk()\ncanvas = tk.Canvas(root, width=400, height=400)\n\n# Draw shapes: rectangle, oval, line, text",
+                expected_output: "tkinter code ready",
+                difficulty: "Medium",
+                hint: "Use canvas.create_rectangle(), create_oval(), create_line(), create_text()",
+                resources: ["https://docs.python.org/3/library/tkinter.html#the-canvas-widget"]
+            },
+            {
+                day: 93,
+                title: "tkinter - Menu Bars",
+                description: "Create a window with a menu bar containing File, Edit, and Help menus.",
+                starter_code: "# import tkinter as tk\n\nroot = tk.Tk()\n\n# Create Menu bar\n# Add File, Edit, Help menus with commands",
+                expected_output: "tkinter code ready",
+                difficulty: "Medium",
+                hint: "Use tk.Menu(), menubar.add_cascade(), menu.add_command()",
+                resources: ["https://docs.python.org/3/library/tkinter.html#menu-widgets"]
+            },
+            {
+                day: 94,
+                title: "tkinter - Dialog Boxes",
+                description: "Use messagebox and simpledialog for user interactions.",
+                starter_code: "# import tkinter as tk\n# from tkinter import messagebox, simpledialog\n\ndef show_dialog():\n    pass\n\nroot = tk.Tk()\n# Create buttons that show different dialogs",
+                expected_output: "tkinter code ready",
+                difficulty: "Easy",
+                hint: "Use messagebox.showinfo(), askyesno(), simpledialog.askstring()",
+                resources: ["https://docs.python.org/3/library/tkinter.messagebox.html"]
+            },
+            {
+                day: 95,
+                title: "Decorators",
+                description: "Create and use a simple decorator function to add timing to function execution.",
+                starter_code: "import time\n\ndef timer_decorator(func):\n    def wrapper(*args, **kwargs):\n        pass\n    return wrapper\n\n@timer_decorator\ndef slow_function():\n    time.sleep(1)\n    return 'Done'\n\nprint(slow_function())",
+                expected_output: "Function took 1.00 seconds\nDone",
+                difficulty: "Hard",
+                hint: "Record start time, call func, calculate and print elapsed time.",
+                resources: ["https://docs.python.org/3/glossary.html#term-decorator"]
+            },
+            {
+                day: 96,
+                title: "Generators and yield",
+                description: "Create a generator function that yields Fibonacci numbers.",
+                starter_code: "def fibonacci(n):\n    # Generator for first n Fibonacci numbers\n    pass\n\n# Use generator in for loop\nfor num in fibonacci(10):\n    print(num, end=' ')",
+                expected_output: "0 1 1 2 3 5 8 13 21 34",
+                difficulty: "Hard",
+                hint: "Use yield to return values, keep track of previous two numbers.",
+                resources: ["https://docs.python.org/3/tutorial/classes.html#generators"]
+            },
+            {
+                day: 97,
+                title: "Context Managers",
+                description: "Create a custom context manager using __enter__ and __exit__.",
+                starter_code: "class Timer:\n    def __enter__(self):\n        pass\n    \n    def __exit__(self, *args):\n        pass\n\nwith Timer():\n    # Code to time\n    print('Working...')",
+                expected_output: "Started timer\nWorking...\nElapsed: X.XX seconds",
+                difficulty: "Hard",
+                hint: "Record start time in __enter__, print elapsed in __exit__.",
+                resources: ["https://docs.python.org/3/reference/datamodel.html#context-managers"]
+            },
+            {
+                day: 98,
+                title: "Regular Expressions",
+                description: "Use the re module to validate email addresses and extract information from text.",
+                starter_code: "# import re\n\ntext = 'Contact us at support@example.com or sales@company.org'\n\n# Find all email addresses\n# Validate a specific email format",
+                expected_output: "['support@example.com', 'sales@company.org']\nValid email: True",
+                difficulty: "Hard",
+                hint: "Use re.findall() with pattern r'\\w+@\\w+\\.\\w+'",
+                resources: ["https://docs.python.org/3/library/re.html"]
+            },
+
+            // WEEK 15: Final Projects (Days 99-100)
+            {
+                day: 99,
+                title: "Final Project - Part 1",
+                description: "Plan and start a comprehensive project combining multiple Python skills. Create a text-based adventure game or data analysis tool.",
+                starter_code: "# Final Project Part 1\n# Choose your project:\n# 1. Text Adventure Game with classes and file I/O\n# 2. Data Analysis with CSV and visualization\n# 3. Personal Finance Tracker with GUI\n\n# Today: Plan structure and create main classes/functions",
+                expected_output: "Project structure created",
+                difficulty: "Hard",
+                hint: "Break project into modules: data models, logic, interface.",
+                resources: ["https://docs.python.org/3/tutorial/modules.html"]
+            },
+            {
+                day: 100,
+                title: "Final Project - Part 2 & Celebration",
+                description: "Complete your final project and review your 100-day journey. Congratulations on completing 100 Days of Python!",
+                starter_code: "# Final Project Part 2\n# Complete implementation\n# Add finishing touches\n# Test thoroughly\n\nprint('Congratulations! You completed 100 Days of Python!')",
+                expected_output: "Project complete!\nCongratulations! You completed 100 Days of Python!",
+                difficulty: "Hard",
+                hint: "Polish your code, add comments, create documentation.",
+                resources: ["https://docs.python.org/3/tutorial/index.html"]
+            }
+        ];
+
+        // Initialize application
+        function init() {
+            loadState();
+            calculateCurrentDay();
+            loadTaskForToday();
+            updateCalendar();
+            updateProgress();
+            startCountdown();
+            renderSubmissions();
+            
+            // Generate remaining 80 tasks if needed
+            generateRemainingTasks();
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('python100days');
+            if (saved) {
+                appState = JSON.parse(saved);
+            } else {
+                appState.tasks = [...defaultTasks];
+                saveState();
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('python100days', JSON.stringify(appState));
+        }
+
+        function generateRemainingTasks() {
+            // Ensure we have 100 tasks
+            for (let i = appState.tasks.length + 1; i <= 100; i++) {
+                appState.tasks.push({
+                    day: i,
+                    title: `Day ${i} Challenge`,
+                    description: "This is a placeholder task. Use the admin panel to customize this day's challenge.",
+                    starter_code: "# Your code here\nprint('Day " + i + "')",
+                    expected_output: null,
+                    difficulty: i <= 30 ? "Easy" : i <= 60 ? "Medium" : "Hard",
+                    hint: "Check the resources or ask your instructor for help.",
+                    resources: ["https://docs.python.org/3/"]
+                });
+            }
+            saveState();
+        }
+
+        function calculateCurrentDay() {
+            const start = new Date(appState.startDate);
+            const now = new Date();
+            const diffTime = Math.abs(now - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            appState.currentDay = Math.min(diffDays, 100);
+            if (appState.currentDay < 1) appState.currentDay = 1;
+            
+            document.getElementById('currentDayDisplay').textContent = appState.currentDay;
+            document.getElementById('dayNumber').textContent = appState.currentDay;
+        }
+
+        function loadTaskForToday() {
+            const task = appState.tasks.find(t => t.day === appState.currentDay) || appState.tasks[0];
+            
+            document.getElementById('taskTitle').textContent = task.title;
+            document.getElementById('taskDescription').textContent = task.description;
+            document.getElementById('difficultyBadge').textContent = task.difficulty;
+            document.getElementById('difficultyBadge').className = `px-3 py-1 rounded-full text-xs font-semibold ${
+                task.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+                task.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                'bg-red-100 text-red-800'
+            }`;
+            
+            document.getElementById('hintText').textContent = task.hint;
+            
+            // Load starter code if not already completed
+            if (!appState.completedDays.includes(appState.currentDay)) {
+                document.getElementById('codeEditor').value = task.starter_code;
+            } else {
+                document.getElementById('codeEditor').value = task.starter_code;
+                document.getElementById('submitBtn').textContent = 'Completed ✓';
+                document.getElementById('submitBtn').classList.add('bg-green-600', 'text-white');
+                document.getElementById('submitBtn').disabled = true;
+            }
+            
+            // Resources
+            const resourcesList = document.getElementById('resourcesList');
+            resourcesList.innerHTML = '';
+            task.resources.forEach(url => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="${url}" target="_blank" class="text-wine hover:text-burgundy text-sm flex items-center">
+                    <i data-lucide="external-link" class="w-3 h-3 mr-1"></i>
+                    ${new URL(url).hostname}
+                </a>`;
+                resourcesList.appendChild(li);
+            });
+            lucide.createIcons();
+        }
+
+        function toggleHint() {
+            const hintSection = document.getElementById('hintSection');
+            hintSection.classList.toggle('hidden');
+        }
+
+        // Python Execution with Skulpt
+        let outputBuffer = '';
+
+        function outf(text) {
+            outputBuffer += text;
+        }
+
+        function runCode() {
+            const code = document.getElementById('codeEditor').value;
+            const outputDiv = document.getElementById('outputConsole');
+            outputBuffer = '';
+            
+            outputDiv.innerHTML = '<span class="text-gray-400">Running...</span>';
+            
+            Sk.configure({
+    output: outf,
+    read: function(x) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+            throw "File not found: '" + x + "'";
+        return Sk.builtinFiles["files"][x];
+    },
+    inputfun: function(prompt) {
+        return prompt ? window.prompt(prompt) : window.prompt("Input:");
+    },
+    inputfunTakesPrompt: true
+});
+            
+            try {
+                let timeout = setTimeout(() => {
+    outputDiv.innerHTML = '<span class="error-text">Error: Code execution timed out</span>';
+}, 5000); // 5 seconds
+
+Sk.misceval.asyncToPromise(function() {
+    return Sk.importMainWithBody("<stdin>", false, code, true);
+}).then(function(mod) {
+    clearTimeout(timeout);
+    outputDiv.innerHTML = outputBuffer || '<span class="text-gray-500">Program executed successfully (no output)</span>';
+}, function(err) {
+    clearTimeout(timeout);
+    outputDiv.innerHTML = `<span class="error-text">Error: ${err.toString()}</span>`;
+});
+            } catch (err) {
+                outputDiv.innerHTML = `<span class="error-text">Error: ${err.toString()}</span>`;
+            }
+        }
+
+        function clearOutput() {
+            document.getElementById('outputConsole').innerHTML = '<span class="text-gray-500">Click \'Run\' to execute your code...</span>';
+        }
+
+        function resetCode() {
+            const task = appState.tasks.find(t => t.day === appState.currentDay);
+            if (task && confirm('Reset code to starter template?')) {
+                document.getElementById('codeEditor').value = task.starter_code;
+            }
+        }
+
+        function validateTask() {
+            const task = appState.tasks.find(t => t.day === appState.currentDay);
+            const outputDiv = document.getElementById('outputConsole');
+            const feedbackDiv = document.getElementById('feedbackMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!task.expected_output) {
+                feedbackDiv.innerHTML = '<span class="text-blue-600">✓ No specific output required. Check your logic and submit when ready.</span>';
+                feedbackDiv.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                submitBtn.classList.add('btn-primary', 'text-white');
+                return;
+            }
+            
+            // Run code and check output
+            const code = document.getElementById('codeEditor').value;
+            outputBuffer = '';
+            
+            Sk.configure({
+    output: outf,
+    read: function(x) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+            throw "File not found: '" + x + "'";
+        return Sk.builtinFiles["files"][x];
+    },
+    inputfun: function(prompt) {
+        return prompt ? window.prompt(prompt) : window.prompt("Input:");
+    },
+    inputfunTakesPrompt: true
+});
+            
+            Sk.misceval.asyncToPromise(function() {
+                return Sk.importMainWithBody("<stdin>", false, code, true);
+            }).then(function(mod) {
+                const actualOutput = outputBuffer.trim();
+                const expectedOutput = task.expected_output.trim();
+                
+                if (actualOutput === expectedOutput) {
+                    feedbackDiv.innerHTML = '<span class="success-text font-semibold">✓ Correct! Your output matches the expected result.</span>';
+                    feedbackDiv.classList.remove('hidden');
+                    document.getElementById('validationStatus').classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                    submitBtn.classList.add('btn-primary', 'text-white');
+                } else {
+                    feedbackDiv.innerHTML = `<span class="error-text">✗ Output doesn't match. Expected: "${expectedOutput}", Got: "${actualOutput}"</span>`;
+                    feedbackDiv.classList.remove('hidden');
+                }
+            }, function(err) {
+                feedbackDiv.innerHTML = `<span class="error-text">✗ Error in code: ${err.toString()}</span>`;
+                feedbackDiv.classList.remove('hidden');
+            });
+        }
+
+        function submitTask() {
+            if (!appState.completedDays.includes(appState.currentDay)) {
+                appState.completedDays.push(appState.currentDay);
+                appState.completedDays.sort((a, b) => a - b);
+                
+                // Add submission log
+                appState.submissions.push({
+                    day: appState.currentDay,
+                    date: new Date().toISOString(),
+                    code: document.getElementById('codeEditor').value
+                });
+                
+                saveState();
+                updateProgress();
+                updateCalendar();
+                renderSubmissions();
+                calculateStreak();
+                
+                // Update UI
+                document.getElementById('submitBtn').textContent = 'Completed ✓';
+                document.getElementById('submitBtn').classList.add('bg-green-600', 'text-white');
+                document.getElementById('submitBtn').disabled = true;
+                
+                // Confetti effect (simple notification)
+                alert('Congratulations! Day ' + appState.currentDay + ' completed! 🎉');
+            }
+        }
+
+        function calculateStreak() {
+            let streak = 0;
+            const sorted = [...appState.completedDays].sort((a, b) => b - a);
+            
+            if (sorted.length > 0 && sorted[0] === appState.currentDay) {
+                streak = 1;
+                for (let i = 1; i < sorted.length; i++) {
+                    if (sorted[i] === sorted[i-1] - 1) {
+                        streak++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            
+            appState.streak = streak;
+            document.getElementById('streakCount').textContent = streak;
+            saveState();
+        }
+
+        function updateProgress() {
+            const completed = appState.completedDays.length;
+            const percentage = Math.round((completed / 100) * 100);
+            
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('progressText').textContent = `${completed}/100`;
+            document.getElementById('percentageText').textContent = `${percentage}%`;
+            document.getElementById('navProgressBar').style.width = `${percentage}%`;
+            
+            // Update circle
+            const circle = document.getElementById('progressCircle');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            const offset = circumference - (percentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }
+
+        function updateCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= 100; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = `day-marker w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium cursor-pointer ${
+                    appState.completedDays.includes(i) ? 'completed' :
+                    i === appState.currentDay ? 'current' :
+                    'bg-gray-200 text-gray-600'
+                }`;
+                dayDiv.textContent = i;
+                dayDiv.title = `Day ${i}`;
+                
+                if (i <= appState.currentDay || appState.completedDays.includes(i)) {
+                    dayDiv.onclick = () => loadHistoricalDay(i);
+                }
+                
+                grid.appendChild(dayDiv);
+            }
+        }
+
+        function loadHistoricalDay(day) {
+            if (day > appState.currentDay) return;
+            appState.currentDay = day;
+            loadTaskForToday();
+            document.getElementById('currentDayDisplay').textContent = day;
+            document.getElementById('dayNumber').textContent = day;
+            updateCalendar(); // Refresh to show correct current highlight
+        }
+
+        function startCountdown() {
+            function updateTimer() {
+                const now = new Date();
+                const tomorrow = new Date(now);
+                tomorrow.setHours(23, 59, 59, 999);
+                
+                const diff = tomorrow - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                document.getElementById('countdown').textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+            
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        // Admin Functions
+        function toggleAdminLogin() {
+            const modal = document.getElementById('adminLoginModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function loginAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                appState.isAdmin = true;
+                toggleAdminLogin();
+                document.getElementById('studentView').classList.add('hidden');
+                document.getElementById('adminView').classList.add('active');
+                loadAdminDashboard();
+            } else {
+                alert('Incorrect password');
+            }
+        }
+
+        function logoutAdmin() {
+            appState.isAdmin = false;
+            document.getElementById('studentView').classList.remove('hidden');
+            document.getElementById('adminView').classList.remove('active');
+        }
+
+        function loadAdminDashboard() {
+            document.getElementById('adminTotalTasks').textContent = appState.tasks.length;
+            document.getElementById('adminStudentProgress').textContent = 
+                Math.round((appState.completedDays.length / 100) * 100) + '%';
+            document.getElementById('adminCurrentDay').textContent = appState.currentDay;
+            document.getElementById('adminCompletedTasks').textContent = appState.completedDays.length;
+            
+            renderTaskTable();
+            renderSubmissions();
+        }
+
+        function renderTaskTable() {
+            const tbody = document.getElementById('taskTableBody');
+            tbody.innerHTML = '';
+            
+            appState.tasks.forEach(task => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50';
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${task.day}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${task.title}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            task.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+                            task.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                        }">${task.difficulty}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${appState.completedDays.includes(task.day) ? 
+                            '<span class="text-green-600 font-medium">Completed</span>' : 
+                            task.day === appState.currentDay ? 
+                            '<span class="text-blue-600 font-medium">Current</span>' : 
+                            '<span class="text-gray-400">Pending</span>'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="editTask(${task.day})" class="text-wine hover:text-burgundy mr-3">Edit</button>
+                        <button onclick="deleteTask(${task.day})" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderSubmissions() {
+            const container = document.getElementById('submissionsLog');
+            if (appState.submissions.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 italic">No submissions recorded yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = appState.submissions.slice().reverse().map(sub => `
+                <div class="border-l-4 border-wine pl-4 py-2 bg-gray-50 rounded">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="font-semibold text-deep-brown">Day ${sub.day}</span>
+                            <span class="text-xs text-gray-500 ml-2">${new Date(sub.date).toLocaleString()}</span>
+                        </div>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Submitted</span>
+                    </div>
+                    <pre class="text-xs text-gray-600 mt-2 overflow-x-auto">${sub.code.substring(0, 100)}${sub.code.length > 100 ? '...' : ''}</pre>
+                </div>
+            `).join('');
+        }
+
+        let editingDay = null;
+
+        function showAddTaskModal() {
+            editingDay = null;
+            document.getElementById('editDay').value = '';
+            document.getElementById('editTitle').value = '';
+            document.getElementById('editDescription').value = '';
+            document.getElementById('editStarterCode').value = '';
+            document.getElementById('editExpectedOutput').value = '';
+            document.getElementById('editDifficulty').value = 'Easy';
+            document.getElementById('editHint').value = '';
+            document.getElementById('editResources').value = '';
+            document.getElementById('editTaskModal').classList.remove('hidden');
+        }
+
+        function editTask(day) {
+            const task = appState.tasks.find(t => t.day === day);
+            if (!task) return;
+            
+            editingDay = day;
+            document.getElementById('editDay').value = task.day;
+            document.getElementById('editTitle').value = task.title;
+            document.getElementById('editDescription').value = task.description;
+            document.getElementById('editStarterCode').value = task.starter_code;
+            document.getElementById('editExpectedOutput').value = task.expected_output || '';
+            document.getElementById('editDifficulty').value = task.difficulty;
+            document.getElementById('editHint').value = task.hint;
+            document.getElementById('editResources').value = task.resources.join(', ');
+            document.getElementById('editTaskModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editTaskModal').classList.add('hidden');
+        }
+
+        function saveTaskEdit() {
+            const day = parseInt(document.getElementById('editDay').value);
+            if (!day || day < 1 || day > 100) {
+                alert('Please enter a valid day number (1-100)');
+                return;
+            }
+            
+            const task = {
+                day: day,
+                title: document.getElementById('editTitle').value,
+                description: document.getElementById('editDescription').value,
+                starter_code: document.getElementById('editStarterCode').value,
+                expected_output: document.getElementById('editExpectedOutput').value || null,
+                difficulty: document.getElementById('editDifficulty').value,
+                hint: document.getElementById('editHint').value,
+                resources: document.getElementById('editResources').value.split(',').map(s => s.trim()).filter(s => s)
+            };
+            
+            const existingIndex = appState.tasks.findIndex(t => t.day === day);
+            if (existingIndex >= 0 && editingDay !== day) {
+                if (!confirm('A task for this day already exists. Overwrite?')) return;
+                appState.tasks[existingIndex] = task;
+            } else if (existingIndex >= 0) {
+                appState.tasks[existingIndex] = task;
+            } else {
+                appState.tasks.push(task);
+                appState.tasks.sort((a, b) => a.day - b.day);
+            }
+            
+            saveState();
+            loadAdminDashboard();
+            closeEditModal();
+            
+            if (day === appState.currentDay) {
+                loadTaskForToday();
+            }
+        }
+
+        function deleteTask(day) {
+            if (!confirm('Are you sure you want to delete this task?')) return;
+            appState.tasks = appState.tasks.filter(t => t.day !== day);
+            saveState();
+            loadAdminDashboard();
+        }
+
+        function exportTasks() {
+            const dataStr = JSON.stringify(appState.tasks, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'python_100_days_tasks.json';
+            link.click();
+        }
+
+        function importTasks(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const tasks = JSON.parse(e.target.result);
+                    if (Array.isArray(tasks) && tasks.length > 0) {
+                        appState.tasks = tasks;
+                        saveState();
+                        loadAdminDashboard();
+                        alert(`Successfully imported ${tasks.length} tasks!`);
+                    } else {
+                        alert('Invalid file format');
+                    }
+                } catch (err) {
+                    alert('Error reading file: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Start Date Management
+        function showStartDateModal() {
+            document.getElementById('startDateInput').value = appState.startDate;
+            document.getElementById('startDateModal').classList.remove('hidden');
+        }
+
+        function closeStartDateModal() {
+            document.getElementById('startDateModal').classList.add('hidden');
+        }
+
+        function saveStartDate() {
+            const newDate = document.getElementById('startDateInput').value;
+            if (newDate) {
+                appState.startDate = newDate;
+                saveState();
+                calculateCurrentDay();
+                loadTaskForToday();
+                updateCalendar();
+                closeStartDateModal();
+            }
+        }
+
+        // Initialize on load
+        window.onload = init;
+    </script>
+<script src="https://deepsite.hf.co/deepsite-badge.js"></script>
+</body>
+</html>
